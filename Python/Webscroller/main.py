@@ -6,4 +6,4 @@ last_indeed_page = extract_indeed_pages()
 # 구한 페이지수를 url 부분에 넣어서 값을 구하는 함수
 indeed_jobs = extract_indeed_jobs(last_indeed_page)
 
-# print(indeed_jobs)
+print(indeed_jobs)

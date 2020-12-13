@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 
 LIMIT = 50
-URL = f"https://jp.indeed.com/jobs?q=python&limit={LIMIT}"
+#URL = f"https://jp.indeed.com/jobs?q=python&limit={LIMIT}"
+URL = f"https://jp.indeed.com/jobs?q=python&limit={LIMIT}&radius=25"
 
 
 def extract_indeed_pages():
@@ -36,7 +37,6 @@ def extract_jop(html):
     company = company.strip()
     location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
     job_id = html["data-jk"]
-    print(job_id)
     return {
         'title':
         title,
