@@ -2,11 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 
 LIMIT = 50
-#URL = f"https://jp.indeed.com/jobs?q=python&limit={LIMIT}"
 URL = f"https://jp.indeed.com/jobs?q=python&limit={LIMIT}&radius=25"
 
 
-def extract_indeed_pages():
+def extract_pages():
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
 
@@ -15,7 +14,6 @@ def extract_indeed_pages():
     links = pagination.find_all('a')
     pages = []
     for link in links[:-1]:
-        # link.string 으로 가져온 문자열을 array에 넣을 때 숫자로 변경하기 위한 코드
         pages.append(int(link.string))
 
     max_page = pages[-1]
@@ -23,17 +21,13 @@ def extract_indeed_pages():
 
 
 def extract_jop(html):
-    # title 과 anchor 를 한번에 찾도록 코드 합치기
     title = html.find("h2", {"class": "title"}).find("a")["title"]
-    # inspect 에서 url 이 들어간 회사와 그렇지 않은 회사가 나눠져 있어서 if 사용
-    # a(anchor) 는 url 이 걸쳐진 것
     company = html.find("span", {"class": "company"})
     company_anchor = company.find("a")
     if company_anchor is not None:
         company = str(company_anchor.string)
     else:
         company = str(company.string)
-    # 여백(빈 공간) 지우기 위한 코드
     company = company.strip()
     location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
     job_id = html["data-jk"]
@@ -49,7 +43,7 @@ def extract_jop(html):
     }
 
 
-def extract_indeed_jobs(last_page):
+def extract_jobs(last_page):
     jobs = []
     for page in range(last_page):
         print(f"Scrapping page {page}")
@@ -59,4 +53,10 @@ def extract_indeed_jobs(last_page):
         for result in results:
             job = extract_jop(result)
             jobs.append(job)
+    return jobs
+
+
+def get_jobs():
+    last_page = extract_pages()
+    jobs = extract_jobs(last_page)
     return jobs
