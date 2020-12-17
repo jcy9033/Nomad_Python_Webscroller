@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 #LIMIT = 50
 URL = f"https://stackoverflow.com/jobs?q=python"
 
-# &pg=2
+#&pg=2
 
 
 def get_last_page():

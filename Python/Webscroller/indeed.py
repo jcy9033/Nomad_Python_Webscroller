@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 LIMIT = 50
 URL = f"https://jp.indeed.com/jobs?q=python&limit={LIMIT}&radius=25"
 
-
 def extract_pages():
     result = requests.get(URL)
     soup = BeautifulSoup(result.text, "html.parser")
@@ -24,14 +23,14 @@ def extract_jop(html):
     title = html.find("h2", {"class": "title"}).find("a")["title"]
     company = html.find("span", {"class": "company"})
     if company:
-        company_anchor = company.find("a")
-        if company_anchor is not None:
-            company = str(company_anchor.string)
-        else:
-            company = str(company.string)
-        company = company.strip()
+      company_anchor = company.find("a")
+      if company_anchor is not None:
+          company = str(company_anchor.string)
+      else:
+          company = str(company.string)
+      company = company.strip()
     else:
-        company = None
+      company = None
     location = html.find("div", {"class": "recJobLoc"})["data-rc-loc"]
     job_id = html["data-jk"]
     return {
@@ -58,8 +57,8 @@ def extract_jobs(last_page):
             jobs.append(job)
     return jobs
 
-
 def get_jobs():
     last_page = extract_pages()
     jobs = extract_jobs(last_page)
     return jobs
+
