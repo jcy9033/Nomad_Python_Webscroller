@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 
 #LIMIT = 50
 URL = f"https://stackoverflow.com/jobs?q=python"
+
 # &pg=2
 
 
@@ -14,6 +15,18 @@ def get_last_page():
     return int(last_page)
 
 
+def extract_job(html):
+    title = html.find("div", {
+        "class": "grid--cell fl1"
+    }).find("h2").find("a")["title"]
+    company, location = html.find("h3", {
+        "class": "fc-black-700 fs-body1 mb4"
+    }).find_all(
+        "span", recursive=False)  # SPAN 안으로 더 깊이(X)
+    print(company.get_text(strip=True), location.get_text(strip=True))
+    return {'title': title}
+
+
 def extract_jobs(last_page):
     # list 는 for 밖에 만든다
     jobs = []
@@ -22,7 +35,9 @@ def extract_jobs(last_page):
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find_all("div", {"class": "-job"})
         for result in results:
-            print(result["data-jobid"])
+            job = extract_job(result)
+            jobs.append(job)
+    return jobs
 
 
 def get_jobs():
