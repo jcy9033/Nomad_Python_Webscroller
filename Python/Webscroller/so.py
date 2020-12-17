@@ -23,14 +23,23 @@ def extract_job(html):
         "class": "fc-black-700 fs-body1 mb4"
     }).find_all(
         "span", recursive=False)  # SPAN 안으로 더 깊이(X)
-    print(company.get_text(strip=True), location.get_text(strip=True))
-    return {'title': title}
+    company = company.get_text(strip=True)
+    # .strip("-").strip( \r).strip(\n)
+    location = location.get_text(strip=True)
+    job_id = html['data-jobid']
+    return {
+        'title': title,
+        'company': company,
+        'location': location,
+        "apply_link": f"https://stackoverflow.com/jobs/{job_id}/"
+    }
 
 
 def extract_jobs(last_page):
     # list 는 for 밖에 만든다
     jobs = []
     for page in range(last_page):
+        print(f"Scrapping SO: Page:{page}")
         result = requests.get(f"{URL}&pg={page+1}")
         soup = BeautifulSoup(result.text, "html.parser")
         results = soup.find_all("div", {"class": "-job"})
