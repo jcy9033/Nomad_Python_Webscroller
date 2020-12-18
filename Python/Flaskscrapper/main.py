@@ -3,6 +3,8 @@ from scrapper import get_jobs
 
 app = Flask("Test")
 
+db = {}
+
 
 @app.route("/")
 def home():
@@ -12,12 +14,19 @@ def home():
 @app.route("/report")
 def report():
     word = request.args.get('word')
+
     if word:
-      word = word.lower()
-      jobs = get_jobs(word)
-      print(jobs)
+        word = word.lower()
+        existingJobs = db.get(word)
+        if existingJobs:
+            jobs = existingJobs
+        else:
+            jobs = get_jobs(word)
+            db[word] = jobs
     else:
-      return redirect("/")
-    return render_template("report.html", searchingBy=word)
+        return redirect("/")
+    return render_template(
+        "report.html", searchingBy=word, resultsNumber=len(jobs), jobs=jobs)
+
 
 app.run(host="0.0.0.0")
