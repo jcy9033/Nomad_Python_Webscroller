@@ -11,8 +11,20 @@ class Car():
         return f"Car with {self.windows} windows"
 
 
-porche = Car(color="Yellow", price="$40")
-kia = Car()
+class Convertible(Car):
 
-print(kia.color, kia.price)
-print(porche.color, porche.price)
+    def __init__(self, **kwargs):
+        # 부모의 메소드를 확장시키기 위해서 사용하는 함수
+        super().__init__(**kwargs)
+        self.time = kwargs.get("time", 10)
+
+    def take_off(self):
+        return "taking off"
+
+    def __str__(self):
+        return f"Car with no roof"
+
+
+porche = Convertible(color="Yellow", price="$40", time=5)
+print(porche.color)
+print(porche.time)
